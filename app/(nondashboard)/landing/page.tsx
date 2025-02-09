@@ -3,10 +3,13 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+import { SearchCourseCard } from "@/components/search-course-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCarousel } from "@/hooks/use-carousel";
 import { cn } from "@/lib/utils";
+import { useGetCoursesQuery } from "@/state/api";
 
 const LoadingSkeleton = () => {
   return (
@@ -18,14 +21,20 @@ const LoadingSkeleton = () => {
           <Skeleton className="mb-8 h-4 w-72" />
           <Skeleton className="h-10 w-40" />
         </div>
-
         <Skeleton className="h-full basis-1/2 rounded-r-lg" />
       </div>
       <div className="mx-auto mt-10 py-12">
-        <Skeleton className="mx-auto mt-10 py-12" />
+        <Skeleton className="mb-4 h-6 w-48" />
         <Skeleton className="mb-8 h-4 w-full max-w-2xl" />
+        <div className="mb-8 flex flex-wrap gap-4">
+          {Array(5)
+            .fill(null)
+            .map((_, index) => (
+              <Skeleton key={index} className="h-6 w-24 rounded-full" />
+            ))}
+        </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {Array(5).map((_, index) => (
+          {[1, 2, 3, 4].map((_, index) => (
             <Skeleton key={index} className="h-[300px] rounded-lg" />
           ))}
         </div>
@@ -35,7 +44,14 @@ const LoadingSkeleton = () => {
 };
 
 const Landing = () => {
+  const router = useRouter();
   const currentImage = useCarousel({ totalImages: 3 });
+  const { data: courses, isLoading, isError } = useGetCoursesQuery({});
+  const handleClickCourse = (courseId: string) => {
+    router.push(`/search?id=${courseId}`);
+  };
+
+  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <motion.div
@@ -113,11 +129,25 @@ const Landing = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {/* COURSES */}
+          {courses &&
+            courses.slice(0, 4).map((course, index) => (
+              <motion.div
+                key={course.courseId}
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                viewport={{ amount: 0.4 }}
+              >
+                <SearchCourseCard
+                  course={course}
+                  onClick={() => handleClickCourse(course.courseId)}
+                />
+              </motion.div>
+            ))}
         </div>
       </motion.div>
     </motion.div>
   );
 };
 
-export { Landing };
+export default Landing;
