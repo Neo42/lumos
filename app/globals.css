@@ -128,3 +128,11 @@ input[type="color"] {
     @apply bg-background text-foreground;
   }
 }
+
+.group:hover .search-icon {
+  @apply text-white-50;
+}
+
+group:hover .search-input {
+  @apply bg-customgreys-darkerGrey text-white-50;
+}
