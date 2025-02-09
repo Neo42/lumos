@@ -1,4 +1,4 @@
-import { Landing } from "@/app/(nondashboard)/landing/page";
+import Landing from "@/app/(nondashboard)/landing/page";
 import { Footer } from "@/components/footer";
 import { NonDashboardNavbar } from "@/components/nondashboard-navbar";
 

@@ -23,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={dmSans.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="mx-auto h-full w-full items-center justify-center">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
